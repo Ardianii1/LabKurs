@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "8ydVTAKEcc/MpYkIRwQilwLiFqgIG5rq+JRQ9O2iQEg=",
+  "Source": "PoliceSystemApi",
+  "BasePath": "_content/PoliceSystemApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
