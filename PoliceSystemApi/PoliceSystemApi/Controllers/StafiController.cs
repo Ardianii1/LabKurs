@@ -1,8 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PoliceSystemApi.Data;
 using PoliceSystemApi.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Data;
+using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+
 
 namespace PoliceSystemApi.Controllers
 {
@@ -10,88 +16,144 @@ namespace PoliceSystemApi.Controllers
     [ApiController]
     public class StafiController : ControllerBase
     {
-        private readonly PoliceSystemDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public StafiController(PoliceSystemDbContext context)
+        public StafiController(IConfiguration configuration)
         {
-            _context = context;
+            _configuration = configuration;
         }
 
 
         [HttpGet]
-        public async Task<IEnumerable<Stafi>> Get()
-           => await _context.Stafi.ToListAsync();
-        
-
-        [HttpGet("id")]
-        [ProducesResponseType(typeof(Stafi), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetById(int id)
+        public JsonResult Get()
         {
-            var stafi = await _context.Stafi.FindAsync(id);
+            string query = @"select * from stafi";
 
-            return stafi == null ? NotFound() : Ok(stafi);  
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("SqlServer");
+            SqlDataReader myReader;
+            using (var myConn = new SqlConnection(sqlDataSource))
+            {
+                myConn.Open();
+                using var myCommand = new SqlCommand(query, myConn);
+                myReader = myCommand.ExecuteReader();
+                table.Load(myReader);
+                myReader.Close();
+                myConn.Close();
+            }
+            return new JsonResult(table);
         }
+
+
+
+        [HttpGet("{id}")]
+        public JsonResult GetbyId(int id)
+        {
+            string query = @"select * from stafi where id = @Id  ";
+
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("SqlServer");
+            SqlDataReader myReader;
+            using (var myConn = new SqlConnection(sqlDataSource))
+            {
+                myConn.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myConn))
+                {
+                    myCommand.Parameters.AddWithValue("@Id", id);
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myConn.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
+
+
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> Create(Stafi stf)
+        public JsonResult Post(Stafi staf)
         {
-            await _context.Stafi.AddAsync(stf);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = stf.Id }, stf);
+            string query = @"
+                           insert into stafi
+                           values (@emri, @mbiemri )
+                            ";
+
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("SqlServer");
+            SqlDataReader myReader;
+            using (var myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myCommand.Parameters.AddWithValue("@emri", staf.emri);
+                    myCommand.Parameters.AddWithValue("@Mbiemri", staf.mbiemri);
+
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult("Added Successfully");
         }
 
 
-        [HttpPut("id")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Update(int id, Stafi stf)
+
+        [HttpPut]
+        public JsonResult Put(Stafi stf)
         {
-            if (id != stf.Id) return BadRequest();
+            string query = @"update stafi 
+                             set name = @Emri, lastname = @Mbiemri
+                              where id = @Id";
 
-            _context.Entry(stf).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("SqlServer");
+            SqlDataReader myReader;
+            using (var myConn = new SqlConnection(sqlDataSource))
+            {
+                myConn.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myConn))
+                {
+                    myCommand.Parameters.AddWithValue("@Id", stf.id);
+                    myCommand.Parameters.AddWithValue("@Emri", stf.emri);
+                    myCommand.Parameters.AddWithValue("@Mbiemri", stf.mbiemri);
 
-            return NoContent();
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myConn.Close();
+                }
+            }
+            return new JsonResult("Updated Successfully");
         }
+
+
 
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete(int id)
+        public JsonResult Delete(int id)
         {
-            var stafiToDelete = await _context.Stafi.FindAsync(id);
-            if(stafiToDelete == null) return NotFound();
+            string query = @"delete Stafi 
+                             where id = @Id";
 
-            _context.Stafi.Remove(stafiToDelete);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("SqlServer");
+            SqlDataReader myReader;
+            using (var myConn = new SqlConnection(sqlDataSource))
+            {
+                myConn.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myConn))
+                {
+                    myCommand.Parameters.AddWithValue("@Id", id);
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myConn.Close();
+                }
+            }
+            return new JsonResult("Deleted Successfully");
         }
-
-
-
-        //public JsonResult Get()
-        //{
-        //    return
-        //        new JsonResult(
-        //            new Stafi {
-        //                Emri = "Ardian",
-        //                Mbiemri = "Hoti" }
-        //        );
-        //}
-        //[HttpPost]
-        //public JsonResult Post()
-        //{
-        //    return
-        //        new JsonResult(
-        //            new Stafi
-        //            {
-        //                Emri = "Ardian",
-        //                Mbiemri = "Hoti"
-        //            }
-        //        );
-        //}
     }
 }

@@ -1,25 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 namespace PoliceSystemApi.Models
 {
     public class Stafi
     {
-        public int Id { get; set; } 
-        [Required]
-        public string Emri { get; set; } = string.Empty;
-        [Required]
-        public string Mbiemri { get; set; } = string.Empty;
-        public DateTime Registered { get; set; }
+        public int id { get; set; } 
+        public string emri { get; set; }
+        public string mbiemri { get; set; }
         
     }
 
-    public enum Priority
-    {
-        Low, Medium, High
-    }
-
-    public enum StafiType
-    {
-        Feature, Bug, Documentation
-    }
 }
