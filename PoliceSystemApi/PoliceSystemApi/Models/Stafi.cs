@@ -7,9 +7,10 @@ namespace PoliceSystemApi.Models
 {
     public class Stafi
     {
+        [Key]
         public int id { get; set; } 
-        public string emri { get; set; }
-        public string mbiemri { get; set; }
+        public string? emri { get; set; }
+        public string? mbiemri { get; set; }
         
     }
 

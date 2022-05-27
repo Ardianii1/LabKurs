@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using PoliceSystemApi.Models;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace PoliceSystemApi.Controllers
 {

@@ -72,41 +72,36 @@ namespace PoliceSystemApi.Controllers
 
 
         [HttpPost]
-        public JsonResult Post(Stafi staf)
+        public object Post(Stafi staf)
         {
-            string query = @"
-                           insert into stafi
-                           values (@emri, @mbiemri )
-                            ";
+            string query = @"insert into stafi (emri , mbiemri) values (@emri, @mbiemri)) ";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("SqlServer");
             SqlDataReader myReader;
-            using (var myCon = new SqlConnection(sqlDataSource))
+            using (var myConn = new SqlConnection(sqlDataSource))
             {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                myConn.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myConn))
                 {
                     myCommand.Parameters.AddWithValue("@emri", staf.emri);
-                    myCommand.Parameters.AddWithValue("@Mbiemri", staf.mbiemri);
-
+                    myCommand.Parameters.AddWithValue("@mbiemri", staf.mbiemri);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
-                    myCon.Close();
+                    myConn.Close();
                 }
             }
-
             return new JsonResult("Added Successfully");
         }
 
 
 
         [HttpPut]
-        public JsonResult Put(Stafi stf)
+        public JsonResult Put(Stafi staf)
         {
             string query = @"update stafi 
-                             set name = @Emri, lastname = @Mbiemri
+                             set eemri = @emri, mbiemri = @mbiemri
                               where id = @Id";
 
             DataTable table = new DataTable();
@@ -117,9 +112,9 @@ namespace PoliceSystemApi.Controllers
                 myConn.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myConn))
                 {
-                    myCommand.Parameters.AddWithValue("@Id", stf.id);
-                    myCommand.Parameters.AddWithValue("@Emri", stf.emri);
-                    myCommand.Parameters.AddWithValue("@Mbiemri", stf.mbiemri);
+                    myCommand.Parameters.AddWithValue("@id", staf.id);
+                    myCommand.Parameters.AddWithValue("@emri", staf.emri);
+                    myCommand.Parameters.AddWithValue("@mbiemri", staf.mbiemri);
 
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
@@ -135,7 +130,7 @@ namespace PoliceSystemApi.Controllers
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
         {
-            string query = @"delete Stafi 
+            string query = @"delete stafi 
                              where id = @Id";
 
             DataTable table = new DataTable();
@@ -146,7 +141,7 @@ namespace PoliceSystemApi.Controllers
                 myConn.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myConn))
                 {
-                    myCommand.Parameters.AddWithValue("@Id", id);
+                    myCommand.Parameters.AddWithValue("@id", id);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();

@@ -5,8 +5,8 @@ namespace PoliceSystemApi.Models
     {
         public int id { get; set; }
         [Required]
-        public string emri { get; set; }
+         public string? emri { get; set; }
         [Required]
-        public string mbiemri { get; set; }
+         public string? mbiemri { get; set; }
     }
 }
