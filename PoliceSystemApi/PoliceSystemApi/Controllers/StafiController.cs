@@ -36,7 +36,7 @@ namespace PoliceSystemApi.Controllers
             {
                 myConn.Open();
                 using var myCommand = new SqlCommand(query, myConn);
-                myReader = myCommand.ExecuteReader();
+                myReader = myCommand. ExecuteReader();
                 table.Load(myReader);
                 myReader.Close();
                 myConn.Close();
@@ -49,7 +49,7 @@ namespace PoliceSystemApi.Controllers
         [HttpGet("{id}")]
         public JsonResult GetbyId(int id)
         {
-            string query = @"select * from stafi where id = @Id  ";
+            string query = @"select * from stafi where id = @id  ";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("SqlServer");
@@ -72,9 +72,9 @@ namespace PoliceSystemApi.Controllers
 
 
         [HttpPost]
-        public object Post(Stafi staf)
+        public JsonResult Post(Stafi stafi)
         {
-            string query = @"insert into stafi (emri , mbiemri) values (@emri, @mbiemri)) ";
+            string query = @"insert into stafi (emri , mbiemri) values (@emri, @mbiemri) ";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("SqlServer");
@@ -84,8 +84,8 @@ namespace PoliceSystemApi.Controllers
                 myConn.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myConn))
                 {
-                    myCommand.Parameters.AddWithValue("@emri", staf.emri);
-                    myCommand.Parameters.AddWithValue("@mbiemri", staf.mbiemri);
+                    myCommand.Parameters.AddWithValue("@emri", stafi.emri);
+                    myCommand.Parameters.AddWithValue("@mbiemri", stafi.mbiemri);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
@@ -97,12 +97,12 @@ namespace PoliceSystemApi.Controllers
 
 
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public JsonResult Put(Stafi staf)
         {
             string query = @"update stafi 
-                             set eemri = @emri, mbiemri = @mbiemri
-                              where id = @Id";
+                             set emri = @emri, mbiemri = @mbiemri
+                              where id = @id";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("SqlServer");

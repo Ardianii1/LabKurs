@@ -1,11 +1,11 @@
-import React, { Component } from "react";
+// import React, { Component } from "react";
+// import { useState, useEffect } from "react";
 
-export class Home extends Component {
-  render() {
-    return (
-      <div>
-        <h3>This is home page</h3>
-        <table className="table">
+const Home = () => {
+  return (
+    <div>
+      <h3 className="mt-5">This is home page</h3>
+      {/* <table className="table">
           <thead>
             <tr>
               <th scope="col">Id</th>
@@ -33,8 +33,8 @@ export class Home extends Component {
               <td></td>
             </tr>
           </tbody>
-        </table>
-      </div>
-    );
-  }
-}
+        </table> */}
+    </div>
+  );
+};
+export default Home;

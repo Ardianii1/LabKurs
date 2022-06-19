@@ -1,7 +1,11 @@
-.bg-light{
-    --bs-bg-opacity: 0;
-width: 100%;
+.bg-light {
+  --bs-bg-opacity: 0;
+  width: 100%;
 }
 /* .header{
     background-color: bisque;
 } */
+
+.container {
+  max-width: 100%;
+}

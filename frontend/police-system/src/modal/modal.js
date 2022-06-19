@@ -6,153 +6,60 @@ function Modal({
   createClick,
   updateClick,
   changeField,
+  // changeEmri,
+  // changeMbiemri,
   object,
+  editClick,
 }) {
   let form = <div></div>;
-  switch (modalTitle) {
-    case "Stafi":
+  switch (modalAction) {
+    case "Add Stafi":
       form = (
         <div>
           <div className="input-group mb-3">
             <span className="input-group-text">Name</span>
-            <input  type="text"  name="name"  className="form-control"  value={object.name}  onChange={changeField}></input>
+            <input
+              type="text"
+              name="emri"
+              className="form-control"
+              // value={object.emri}
+              onChange={changeField}
+            ></input>
             <br></br>
             <span className="input-group-text">Last Name</span>
-            <input  type="text"  name="lastname"  className="form-control"  value={object.lastname}  onChange={changeField}></input>
-            
+            <input
+              type="text"
+              name="mbiemri"
+              className="form-control"
+              // value={object.mbiemri}
+              onChange={changeField}
+            ></input>
           </div>
+          {/* <input type="submit" name="submit" onClick={createClick}></input> */}
         </div>
       );
       break;
-    // case "Product":
-    //   form = (
-    //     <div>
-    //       <div className="input-group mb-3">
-    //         <span className="input-group-text">Name</span>
-    //         <input
-    //           type="text"
-    //           name="name"
-    //           className="form-control"
-    //           value={object.name}
-    //           onChange={changeField}
-    //         />
-    //       </div>
-    //       <div className="input-group mb-3">
-    //         <span className="input-group-text">Description</span>
-    //         <input
-    //           type="text"
-    //           name="description"
-    //           className="form-control"
-    //           value={object.description}
-    //           onChange={changeField}
-    //         />
-    //       </div>
-    //       <div className="input-group mb-3">
-    //         <span className="input-group-text">Image</span>
-
-    //         <input
-    //           name="imgUrl"
-    //           type="text"
-    //           className="form-control"
-    //           value={object.imgUrl}
-    //           onChange={changeField}
-    //         />
-    //       </div>
-    //       <div className="input-group mb-3">
-    //         <span className="input-group-text">User ID</span>
-    //         <input
-    //           name="userId"
-    //           type="text"
-    //           className="form-control"
-    //           value={object.userId}
-    //           onChange={changeField}
-    //         />
-    //       </div>
-    //       <div className="input-group mb-3">
-    //         <span className="input-group-text">Rating</span>
-    //         <input
-    //           name="rating"
-    //           type="text"
-    //           className="form-control"
-    //           value={object.rating}
-    //           onChange={changeField}
-    //         />
-    //       </div>
-    //       <div className="input-group mb-3">
-    //         <span className="input-group-text">Price</span>
-    //         <input
-    //           name="price"
-    //           type="text"
-    //           className="form-control"
-    //           value={object.price}
-    //           onChange={changeField}
-    //         />
-    //       </div>
-    //       <div className="input-group mb-3">
-    //         <span className="input-group-text">Sale</span>
-    //         <input
-    //           name="sale"
-    //           type="text"
-    //           className="form-control"
-    //           value={object.sale}
-    //           onChange={changeField}
-    //         />
-    //       </div>
-    //       <div className="input-group mb-3">
-    //         <span className="input-group-text">Category Id</span>
-    //         <input
-    //           name="categoryId"
-    //           type="text"
-    //           className="form-control"
-    //           value={object.categoryId}
-    //           onChange={changeField}
-    //         />
-    //       </div>
-    //     </div>
-    //   );
-    //   break;
-    // case "User":
+    case "Edit Stafi":
       form = (
         <div>
           <div className="input-group mb-3">
             <span className="input-group-text">Name</span>
             <input
               type="text"
-              name="name"
+              name="emri"
               className="form-control"
-              value={object.name}
+              defaultValue={object.emri}
               onChange={changeField}
-            />
-          </div>
-          <div className="input-group mb-3">
-            <span className="input-group-text">Surname</span>
+            ></input>
+            <br></br>
+            <span className="input-group-text">Last Name</span>
             <input
               type="text"
-              name="surname"
+              name="mbiemri"
               className="form-control"
-              value={object.surname}
+              defaultValue={object.mbiemri}
               onChange={changeField}
-            />
-          </div>
-          <div className="input-group mb-3">
-            <span className="input-group-text">Email</span>
-            <input
-              type="email"
-              name="email"
-              className="form-control"
-              value={object.email}
-              onChange={changeField}
-            />
-          </div>
-          <div className="input-group mb-3">
-            <span className="input-group-text">Password</span>
-            <input
-              type="password"
-              name="password"
-              className="form-control"
-              value={object.password}
-              onChange={changeField}
-            />
+            ></input>
           </div>
         </div>
       );

@@ -1,50 +1,66 @@
-import React, { useState, useEffect, Component } from "react";
-import { variables } from "../api/Variables";
+import React, { useState, useEffect } from "react";
 import Modal from "../modal/modal";
-
-
+import { variables } from "../api/Variables";
 
 function Stafi() {
   const [stafis, setStafis] = useState([]);
-  const [modalTitle, setModalTitle] = useState("");
-  const [modalAction, setModalAction] = useState("");
+  const [modalTitle, setModalTitle] = useState([]);
+  const [modalAction, setModalAction] = useState([]);
+  // const [postId, setPostId] = useState(null);
+  // const [emri, setEmri] = useState("");
+  // const [mbiemri, setMbiemri] = useState("");
   const [stafi, setStafi] = useState({
     id: 0,
-    name: "",
-    description: "",
-    imgUrl: "default.png",
-    userId: 1,
-    rating: "",
-    price: "",
-    sale: "",
-    categoryId: 1,
+    emri: "",
+    mbiemri: "",
+    // imgUrl: "default.png",
+    // userId: 1,
+    // rating: "",
+    // price: "",
+    // sale: "",
+    // categoryId: 1,
   });
+  //   const refreshList(){
+  //     fetch(variables.API_URL+'stafi')
+  //     .then(response=>response.json())
+  //     .then(data=>{
+  //         this.setState({stafi:data});
+  //     });
+  // }
+
   useEffect(() => {
-    fetch(variables.API_URL + "stafi")
+    fetch(variables.API_URL + "stafi", {
+      "content-type": "application/json",
+      mode: "cors",
+      method: "GET",
+      // redirect: "follow",
+    })
       .then((response) => response.json())
-      .then((data) => {
-        setStafis(data);
+      .then((stafi) => {
+        setStafis(stafi);
       });
-  }, [stafis]);
+  }, []);
+
   const addClick = () => {
     setModalTitle("Stafi");
     setModalAction("Add Stafi");
     setStafi({
       id: 0,
-      name: "",
-      surname: "",
+      emri: "",
+      mbiemri: "",
     });
-    console.log(stafi);
+    // console.log(stafi);
   };
   const editClick = (stafi) => {
     setModalTitle("Stafi");
     setModalAction("Edit Stafi");
     setStafi({
       id: stafi.id,
-      name: stafi.name,
-      surname: stafi.surname,
+      emri: stafi.emri,
+      mbiemri: stafi.mbiemri,
     });
   };
+
   const createClick = () => {
     fetch(variables.API_URL + "stafi", {
       method: "POST",
@@ -53,22 +69,25 @@ function Stafi() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: stafi.name,
-        surname: stafi.surname,
+        emri: stafi.emri,
+        mbiemri: stafi.mbiemri,
       }),
     })
       .then((res) => res.json())
       .then(
         (result) => {
           alert(result);
+          window.location.reload();
         },
         (error) => {
           alert("Failed", error);
         }
       );
   };
-  const updateClick = () => {
-    fetch(variables.API_URL + "stafi", {
+
+  const updateClick = (id) => {
+    fetch(variables.API_URL + "stafi/" + id, {
+      mode: "cors",
       method: "PUT",
       headers: {
         Accept: "application/json",
@@ -76,13 +95,14 @@ function Stafi() {
       },
       body: JSON.stringify({
         id: stafi.id,
-        name: stafi.name,
-        surname: stafi.surname,
+        emri: stafi.emri,
+        mbiemri: stafi.mbiemri,
       }),
     })
       .then((res) => res.json())
       .then(
         (result) => {
+          window.location.reload();
           alert(result);
         },
         (error) => {
@@ -90,8 +110,9 @@ function Stafi() {
         }
       );
   };
+
   const deleteClick = (id) => {
-    console.log(id);
+    // console.log(id);
     if (window.confirm("Are you sure?")) {
       fetch(variables.API_URL + "stafi/" + id, {
         method: "DELETE",
@@ -102,6 +123,7 @@ function Stafi() {
       })
         .then((res) => res.json())
         .then(
+          window.location.reload(),
           (result) => {
             alert(result);
           },
@@ -114,6 +136,9 @@ function Stafi() {
   const changeField = (e) => {
     setStafi({ ...stafi, [e.target.name]: e.target.value });
   };
+  // const changeMbiemri = (e) => {
+  //   this.setState({ mbiemri: e.target.value });
+  // };
   return (
     <div>
       <button
@@ -123,17 +148,16 @@ function Stafi() {
         data-bs-target="#exampleModal"
         onClick={() => addClick()}
       >
-        Add User
+        Add New
       </button>
-      <table className="table table-hover table-responsive">
+      <table className="table table-striped table-hover table-responsive">
         <thead>
           <tr>
             <th>Id</th>
             <th>Name</th>
             <th>Surname</th>
-            <th>Email</th>
-            <th>Password</th>
-            <th>Role</th>
+            {/* <th>Email</th> */}
+            {/* <th>Role</th> */}
             <th>Options</th>
           </tr>
         </thead>
@@ -142,46 +166,48 @@ function Stafi() {
             return (
               <tr key={stafi.id}>
                 <td>{stafi.id}</td>
-                <td>{stafi.name}</td>
-                <td>{stafi.surname}</td>
-                <td>{stafi.email}</td>
+                <td>{stafi.emri}</td>
+                <td>{stafi.mbiemri}</td>
+                {/* <td>{stafi.email}</td>
                 <td>{stafi.password}</td>
-                <td>{stafi.roleId}</td>
-                <td>
+                <td>{stafi.roleId}</td> */}
+                <td className="gap-2">
                   <button
                     type="button"
-                    className="btn btn-edit btn-light mr-1"
+                    className="btn btn-edit btn-info "
                     data-bs-toggle="modal"
                     data-bs-target="#exampleModal"
                     onClick={() => editClick(stafi)}
                   >
                     <svg
+                      xmlns="http://www.w3.org/2000/svg"
                       width="16"
                       height="16"
                       fill="currentColor"
                       className="bi bi-pencil-square"
                       viewBox="0 0 16 16"
                     >
-                      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.752456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-12l6813-6.814z" />
+                      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                       <path
                         fillRule="evenodd"
-                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.50 01-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
                       />
                     </svg>
                   </button>
                   <button
                     onClick={() => deleteClick(stafi.id)}
                     type="button"
-                    className="btn btn-delete btn-light mr-1"
+                    className="btn btn-delete btn-danger ml-1"
                   >
                     <svg
+                      xmlns="http://www.w3.org/2000/svg"
                       width="16"
                       height="16"
                       fill="currentColor"
                       className="bi bi-trash-fill"
                       viewBox="0 0 16 16"
                     >
-                      <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 100 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-5zM85a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+                      <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
                     </svg>
                   </button>
                 </td>
@@ -196,6 +222,7 @@ function Stafi() {
         createClick={createClick}
         updateClick={updateClick}
         changeField={changeField}
+        // changeMbiemri={changeMbiemri}
         object={stafi}
       />
     </div>
